@@ -11,19 +11,25 @@ import java.util.List;
 @Slf4j
 public class GeneratePlanServiceImpl implements GeneratePlanService {
 
+    private static final byte daysInMonth = 30;
+    private static final short daysInYear = 360;
+
     @Override
     public List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto) {
-        double result = calculateAnnuity(loanDataDto);
-        System.out.println(result);
+        double annuity = calculateAnnuity(loanDataDto);
+        float interest = calculateInterest(loanDataDto, daysInMonth, daysInYear);
+        double calculatePrincipal = calculatePrincipal(annuity, interest);
+        System.out.println(annuity);
+        System.out.println(interest);
+        System.out.println(calculatePrincipal);
         return null;
     }
 
-    private float calculateInterest(float interestRate, float initialOutstandingPrincipal,
-                                    byte daysInMonth, short daysInYear) {
-        return (interestRate * daysInMonth * initialOutstandingPrincipal) / daysInYear;
+    private float calculateInterest(LoanDataDto loanDataDto, byte daysInMonth, short daysInYear) {
+        return (loanDataDto.getNominalRate() * daysInMonth * loanDataDto.getLoanAmount()) / daysInYear;
     }
 
-    private float calculatePrincipal(float annuity, float interest) {
+    private double calculatePrincipal(double annuity, float interest) {
         return annuity - interest;
     }
 
