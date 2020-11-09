@@ -17,7 +17,7 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
     @Override
     public List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto) {
         double annuity = calculateAnnuity(loanDataDto);
-        float interest = calculateInterest(loanDataDto, daysInMonth, daysInYear);
+        double interest = calculateInterest(loanDataDto, daysInMonth, daysInYear);
         double calculatePrincipal = calculatePrincipal(annuity, interest);
         System.out.println(annuity);
         System.out.println(interest);
@@ -25,17 +25,18 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         return null;
     }
 
-    private float calculateInterest(LoanDataDto loanDataDto, byte daysInMonth, short daysInYear) {
-        return (loanDataDto.getNominalRate() * daysInMonth * loanDataDto.getLoanAmount()) / daysInYear;
+    private double calculateInterest(LoanDataDto loanDataDto, byte daysInMonth, short daysInYear) {
+        return (loanDataDto.getNominalRate() * 0.01 * daysInMonth * loanDataDto.getLoanAmount()) / (daysInYear * 12);
     }
 
-    private double calculatePrincipal(double annuity, float interest) {
+    private double calculatePrincipal(double annuity, double interest) {
         return annuity - interest;
     }
 
     private double calculateAnnuity(LoanDataDto loanDataDto) {
-        float monthlyRate = loanDataDto.getNominalRate() / 12;
-        return ((loanDataDto.getLoanAmount() * monthlyRate)
-                / (1 - Math.pow(1 + monthlyRate, -loanDataDto.getDuration())));
+        float monthlyRate = loanDataDto.getNominalRate() / (12 * 100);
+        System.out.println(1 / Math.pow(1 + monthlyRate, 24));
+        return (loanDataDto.getLoanAmount() * monthlyRate)
+                / (1 - Math.pow(1 + monthlyRate, -loanDataDto.getDuration()));
     }
 }
