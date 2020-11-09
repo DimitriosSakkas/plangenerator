@@ -22,6 +22,7 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
     @Override
     public List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto) {
         double annuity = calculateAnnuity(loanDataDto);
+        log.info("annuity: {}", annuity);
 
         LinkedList<BorrowerPaymentsDTO> dtoList = new LinkedList<>();
         LocalDate startDate = loanDataDto.getStartDate();
@@ -46,6 +47,9 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         double borrowerPaymentAmount = calculateBorrowerPaymentAmount(principal, interest);
         double remainingOutstandingPrincipal =
                 calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
+        log.info("date: {}, interest: {}, principal: {}, borrowerPaymentAmount: {}, " +
+                        "remainingOutstandingPrincipal: {}", date, interest, principal,
+                borrowerPaymentAmount, remainingOutstandingPrincipal);
 
         return BorrowerPaymentsDTO
                 .builder()
