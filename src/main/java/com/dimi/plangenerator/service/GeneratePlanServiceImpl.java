@@ -21,35 +21,32 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
 
     @Override
     public List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto) {
-
-        double monthlyRate = loanDataDto.getNominalRate() * 0.01 / 12;
-        double annuity = calculateAnnuity(monthlyRate, loanDataDto.getLoanAmount(), loanDataDto.getDuration());
+        double annuity = calculateAnnuity(loanDataDto);
 
         LinkedList<BorrowerPaymentsDTO> dtoList = new LinkedList<>();
-
         LocalDate startDate = loanDataDto.getStartDate();
-        dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), loanDataDto.getLoanAmount(), startDate));
+        dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(),
+                loanDataDto.getLoanAmount(), startDate));
         IntStream
                 .iterate(1, i -> i + 1)
-                .limit(loanDataDto.getDuration())
+                .limit(loanDataDto.getDuration() - 1)
                 .forEach(i ->
-                        dtoList
-                                .add(repaymentPlan(annuity,
-                                        loanDataDto.getNominalRate(),
-                                        dtoList.getLast().getRemainingOutstandingPrincipal(),
-                                        startDate.plusMonths(i))));
-
+                        dtoList.add(repaymentPlan(annuity,
+                                loanDataDto.getNominalRate(),
+                                dtoList.getLast().getRemainingOutstandingPrincipal(),
+                                startDate.plusMonths(i))));
         return dtoList;
     }
 
-    private BorrowerPaymentsDTO repaymentPlan(double annuity, double rate, double initialOutstandingPrincipal, LocalDate date) {
+    private BorrowerPaymentsDTO repaymentPlan(double annuity, double rate,
+                                              double initialOutstandingPrincipal, LocalDate date) {
         double interest = calculateInterest(rate, initialOutstandingPrincipal);
-        double principal = calculatePrincipal(annuity, interest);
+        double principal = calculatePrincipal(annuity, interest, initialOutstandingPrincipal);
         double borrowerPaymentAmount = calculateBorrowerPaymentAmount(principal, interest);
-        double remainingOutstandingPrincipal = calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
+        double remainingOutstandingPrincipal =
+                calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
 
-        return BorrowerPaymentsDTO
-                .builder()
+        return BorrowerPaymentsDTO.builder()
                 .date(date)
                 .interest(interest)
                 .principal(principal)
@@ -58,23 +55,28 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
                 .build();
     }
 
-    private double calculateAnnuity(double monthlyRate, double loanAmount, short duration) {
-        return roundValues(loanAmount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -duration)));
+    private double calculateAnnuity(LoanDataDto loanDataDto) {
+        double monthlyRate = loanDataDto.getNominalRate() * 0.01 / 12;
+        return roundValues(loanDataDto.getLoanAmount() * monthlyRate
+                / (1 - Math.pow(1 + monthlyRate, -loanDataDto.getDuration())));
     }
 
     private double calculateInterest(double interestRate, double initialOutstandingPrincipal) {
-        return roundValues(interestRate * 0.01 * daysInMonth * initialOutstandingPrincipal / daysInYear);
+        return roundValues(interestRate * 0.01 * daysInMonth * initialOutstandingPrincipal
+                / daysInYear);
     }
 
-    private double calculatePrincipal(double annuity, double interest) {
-        return roundValues(annuity - interest);
+    private double calculatePrincipal(double annuity, double interest,
+                                      double initialOutstandingPrincipal) {
+        return Math.min(roundValues(annuity - interest), initialOutstandingPrincipal);
     }
 
     private double calculateBorrowerPaymentAmount(double principal, double interest) {
         return roundValues(principal + interest);
     }
 
-    private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal) {
+    private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal,
+                                                          double principal) {
         return roundValues(initialOutstandingPrincipal - principal);
     }
 
