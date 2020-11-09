@@ -8,8 +8,8 @@ import java.time.LocalDate;
 @Data
 public class LoanDataDto {
 
-    private float loanAmount;
-    private float nominalRate;
+    private double loanAmount;
+    private double nominalRate;
     private short duration;
     private LocalDate startDate;
 }

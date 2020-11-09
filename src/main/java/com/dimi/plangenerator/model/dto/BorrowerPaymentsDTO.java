@@ -7,9 +7,9 @@ import java.time.LocalDate;
 @Data
 public class BorrowerPaymentsDTO {
 
-    private float borrowerPaymentAmount;
+    private double borrowerPaymentAmount;
     private LocalDate date;
-    private float interest;
-    private float principal;
-    private float remainingOutstandingPrincipal;
+    private double interest;
+    private double principal;
+    private double remainingOutstandingPrincipal;
 }
