@@ -51,6 +51,7 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
                 .interest(interest)
                 .principal(principal)
                 .borrowerPaymentAmount(borrowerPaymentAmount)
+                .initialOutstandingPrincipal(initialOutstandingPrincipal)
                 .remainingOutstandingPrincipal(remainingOutstandingPrincipal)
                 .build();
     }
