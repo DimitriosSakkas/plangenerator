@@ -25,8 +25,9 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
 
         LinkedList<BorrowerPaymentsDTO> dtoList = new LinkedList<>();
         LocalDate startDate = loanDataDto.getStartDate();
-        dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(),
-                loanDataDto.getLoanAmount(), startDate));
+        dtoList
+                .add(repaymentPlan(annuity, loanDataDto.getNominalRate(),
+                        loanDataDto.getLoanAmount(), startDate));
         IntStream
                 .iterate(1, i -> i + 1)
                 .limit(loanDataDto.getDuration() - 1)
@@ -46,7 +47,8 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         double remainingOutstandingPrincipal =
                 calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
 
-        return BorrowerPaymentsDTO.builder()
+        return BorrowerPaymentsDTO
+                .builder()
                 .date(date)
                 .interest(interest)
                 .principal(principal)
@@ -67,8 +69,7 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
                 / daysInYear);
     }
 
-    private double calculatePrincipal(double annuity, double interest,
-                                      double initialOutstandingPrincipal) {
+    private double calculatePrincipal(double annuity, double interest, double initialOutstandingPrincipal) {
         return Math.min(roundValues(annuity - interest), initialOutstandingPrincipal);
     }
 
@@ -76,14 +77,12 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         return roundValues(principal + interest);
     }
 
-    private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal,
-                                                          double principal) {
+    private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal) {
         return roundValues(initialOutstandingPrincipal - principal);
     }
 
     private double roundValues(double input) {
-        BigDecimal bd = new BigDecimal(input).setScale(2, RoundingMode.HALF_EVEN);
-        return bd.doubleValue();
+        return new BigDecimal(input).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
     }
 
 }
