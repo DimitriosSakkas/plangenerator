@@ -5,7 +5,6 @@ import com.dimi.plangenerator.model.BorrowerPaymentsDTO;
 import com.dimi.plangenerator.model.LoanDataDto;
 import com.dimi.plangenerator.service.GeneratePlanService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -36,18 +35,11 @@ public class GeneratePlanControllerTest {
     @MockBean
     private GeneratePlanService generatePlanService;
 
-    private LoanDataDto loanDataDto;
-    private List<BorrowerPaymentsDTO> borrowerPaymentsDTOS;
-
-    @BeforeEach
-    public void init() {
-        loanDataDto = MockData.createLoanDataDto();
-        borrowerPaymentsDTOS = MockData.createBorrowerPaymentsDTOs();
-    }
-
     @Test
     public void shouldGeneratePlan() throws Exception {
         // given
+        LoanDataDto loanDataDto = MockData.createLoanDataDto();
+        List<BorrowerPaymentsDTO> borrowerPaymentsDTOS = MockData.createBorrowerPaymentsDTOs();
         Mockito
                 .when(generatePlanService.generatePlan(ArgumentMatchers.any(LoanDataDto.class)))
                 .thenReturn(borrowerPaymentsDTOS);
