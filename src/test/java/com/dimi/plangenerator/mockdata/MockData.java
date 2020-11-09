@@ -18,12 +18,12 @@ public class MockData {
     private static final double remainingOutstandingPrincipal1 = 1000.42;
     private static final double borrowerPaymentAmount1 = 1001.25;
     private static final double principal1 = 999.58;
-    private static final double interest1 = 2000;
+    private static final double interest1 = 1.67;
 
     private static final double remainingOutstandingPrincipal2 = 0;
-    private static final double borrowerPaymentAmount2 = 1000.42;
-    private static final double principal2 = 999.58;
-    private static final double interest2 = 1000.42;
+    private static final double borrowerPaymentAmount2 = 1001.25;
+    private static final double principal2 = 1000.42;
+    private static final double interest2 = 0.83;
 
     public static LoanDataDto createLoanDataDto() {
         LoanDataDto dto = new LoanDataDto();

@@ -22,20 +22,16 @@ public class GeneratePlanServiceImplTest {
     private GeneratePlanServiceImpl generatePlanService;
 
     private LoanDataDto loanDataDto;
-    private List<BorrowerPaymentsDTO> borrowerPaymentsDTO1;
+    private List<BorrowerPaymentsDTO> borrowerPaymentsDTOs;
 
     @BeforeEach
     public void init() {
         loanDataDto = MockData.createLoanDataDto();
-        borrowerPaymentsDTO1 = MockData.createBorrowerPaymentsDTO1();
-        borrowerPaymentsDTO2 = MockData.createBorrowerPaymentsDTO2();
+        borrowerPaymentsDTOs = MockData.createBorrowerPaymentsDTOs();
     }
 
     @Test
     public void shouldReturnRepaymentPlan() {
-        // given
-
-
         // when
         List<BorrowerPaymentsDTO> result = generatePlanService
                 .generatePlan(loanDataDto);
@@ -44,8 +40,8 @@ public class GeneratePlanServiceImplTest {
         // then
         Assertions.assertAll(
                 "check if repayment plan has the right values",
-                () -> assertEquals(borrowerPaymentsDTO1, result.get(0)),
-                () -> assertEquals(borrowerPaymentsDTO2, result.get(1))
+                () -> assertEquals(borrowerPaymentsDTOs.get(0), result.get(0)),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1), result.get(1))
         );
 
     }
