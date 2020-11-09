@@ -53,16 +53,4 @@ public class GeneratePlanControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
     }
 
-    @Test
-    public void shouldNotAcceptEmptyRequestBody() throws Exception {
-        // given
-        LoanDataDto dto = null;
-
-        // when & then
-        mockMvc
-                .perform(post(baseUrl)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
-    }
 }

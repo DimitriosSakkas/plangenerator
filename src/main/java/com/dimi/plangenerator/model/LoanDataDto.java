@@ -2,21 +2,20 @@ package com.dimi.plangenerator.model;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 public class LoanDataDto {
 
-    @NonNull
+    @PositiveOrZero(message = "loanAmount must be zero or positive")
     private double loanAmount;
-    @NonNull
+    @PositiveOrZero(message = "nominalRate must be zero or positive")
     private double nominalRate;
-    @NonNull
+    @PositiveOrZero(message = "duration must be zero or positive")
     private short duration;
-    @NonNull
+    @NotNull(message = "startDate cannot be null")
     private LocalDate startDate;
 }
