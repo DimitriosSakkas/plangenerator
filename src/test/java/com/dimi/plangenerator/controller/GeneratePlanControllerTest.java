@@ -46,7 +46,7 @@ public class GeneratePlanControllerTest {
     }
 
     @Test
-    public void shouldGetExchangeRatesAndSaveItInDb() throws Exception {
+    public void shouldGeneratePlan() throws Exception {
         // given
         Mockito
                 .when(generatePlanService.generatePlan(ArgumentMatchers.any(LoanDataDto.class)))
@@ -59,5 +59,18 @@ public class GeneratePlanControllerTest {
                         .content(objectMapper.writeValueAsString(loanDataDto)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
+    }
+
+    @Test
+    public void shouldNotAcceptEmptyRequestBody() throws Exception {
+        // given
+        LoanDataDto dto = null;
+
+        // when & then
+        mockMvc
+                .perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest());
     }
 }
