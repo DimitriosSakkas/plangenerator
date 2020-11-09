@@ -1,7 +1,7 @@
 package com.dimi.plangenerator.controller;
 
-import com.dimi.plangenerator.model.dto.BorrowerPaymentsDTO;
-import com.dimi.plangenerator.model.dto.LoanDataDto;
+import com.dimi.plangenerator.model.BorrowerPaymentsDTO;
+import com.dimi.plangenerator.model.LoanDataDto;
 import com.dimi.plangenerator.service.GeneratePlanService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

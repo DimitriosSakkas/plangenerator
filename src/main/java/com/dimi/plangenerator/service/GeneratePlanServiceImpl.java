@@ -1,14 +1,14 @@
 package com.dimi.plangenerator.service;
 
-import com.dimi.plangenerator.model.dto.BorrowerPaymentsDTO;
-import com.dimi.plangenerator.model.dto.LoanDataDto;
+import com.dimi.plangenerator.model.BorrowerPaymentsDTO;
+import com.dimi.plangenerator.model.LoanDataDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -20,39 +20,43 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
 
     @Override
     public List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto) {
-        List<BorrowerPaymentsDTO> dtoList = new ArrayList<>();
+        LinkedList<BorrowerPaymentsDTO> dtoList = new LinkedList<>();
 
         double monthlyRate = loanDataDto.getNominalRate() * 0.01 / 12;
         double annuity = calculateAnnuity(monthlyRate, loanDataDto.getLoanAmount(), loanDataDto.getDuration());
         System.out.println(annuity);
 
-        BorrowerPaymentsDTO dto1 = new BorrowerPaymentsDTO();
-        double interest1 = calculateInterest(loanDataDto.getNominalRate(), loanDataDto.getLoanAmount(), daysInMonth, daysInYear);
-        dto1.setInterest(interest1);
-        dto1.setPrincipal(calculatePrincipal(annuity, interest1));
-        //dto1.setRemainingOutstandingPrincipal(c);
-        //dto1.set();
-        // dto1
+        dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), loanDataDto.getLoanAmount()));
 
         for (int month = 1; month <= loanDataDto.getDuration(); month++) {
-            BorrowerPaymentsDTO dto = new BorrowerPaymentsDTO();
-
-            double interest = calculateInterest(loanDataDto.getNominalRate(), dto.getRemainingOutstandingPrincipal(), daysInMonth, daysInYear);
-            System.out.println(interest);
-            dto.setInterest(interest);
-            double calculatePrincipal = calculatePrincipal(annuity, interest);
-            // System.out.println(calculatePrincipal);
-            dtoList.add(dto);
+            dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), dtoList.getLast().getRemainingOutstandingPrincipal()));
         }
 
         return null;
+    }
+
+    private BorrowerPaymentsDTO repaymentPlan(double annuity, double rate, double initialOutstandingPrincipal) {
+        BorrowerPaymentsDTO dto = new BorrowerPaymentsDTO();
+        double interest = calculateInterest(rate, initialOutstandingPrincipal);
+        double principal = calculatePrincipal(annuity, interest);
+        double borrowerPaymentAmount = calculateBorrowerPaymentAmount(principal, interest);
+        double remainingOutstandingPrincipal = calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
+
+        dto.setDate(LocalDate.now());
+        dto.setInterest(interest);
+        dto.setPrincipal(principal);
+        dto.setBorrowerPaymentAmount(borrowerPaymentAmount);
+        dto.setRemainingOutstandingPrincipal(remainingOutstandingPrincipal);
+        dto.setInitialOutstandingPrincipal(initialOutstandingPrincipal);
+
+        return dto;
     }
 
     private double calculateAnnuity(double monthlyRate, double loanAmount, short duration) {
         return roundValues(loanAmount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -duration)));
     }
 
-    private double calculateInterest(double interestRate, double initialOutstandingPrincipal, byte daysInMonth, short daysInYear) {
+    private double calculateInterest(double interestRate, double initialOutstandingPrincipal) {
         return roundValues(interestRate * 0.01 * daysInMonth * initialOutstandingPrincipal / daysInYear);
     }
 
@@ -61,19 +65,11 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
     }
 
     private double calculateBorrowerPaymentAmount(double principal, double interest) {
-        return principal + interest;
+        return roundValues(principal + interest);
     }
 
     private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal) {
-        return initialOutstandingPrincipal - principal;
-    }
-
-    private byte calculateDaysInMonth(LocalDate date) {
-        return (byte) (30 - date.getDayOfMonth());
-    }
-
-    private byte calculateMothnsInYear(LocalDate date) {
-        return (byte) (12 - date.getMonthValue());
+        return roundValues(initialOutstandingPrincipal - principal);
     }
 
     private double roundValues(double input) {

@@ -1,4 +1,4 @@
-package com.dimi.plangenerator.model.dto;
+package com.dimi.plangenerator.model;
 
 import lombok.Data;
 
@@ -13,5 +13,4 @@ public class BorrowerPaymentsDTO {
     private double interest;
     private double principal;
     private double remainingOutstandingPrincipal;
-    private double annuity;
 }

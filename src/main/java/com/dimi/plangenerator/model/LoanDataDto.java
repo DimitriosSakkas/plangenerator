@@ -1,4 +1,4 @@
-package com.dimi.plangenerator.model.dto;
+package com.dimi.plangenerator.model;
 
 
 import lombok.Data;

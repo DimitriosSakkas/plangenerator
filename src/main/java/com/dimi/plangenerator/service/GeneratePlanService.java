@@ -1,7 +1,7 @@
 package com.dimi.plangenerator.service;
 
-import com.dimi.plangenerator.model.dto.BorrowerPaymentsDTO;
-import com.dimi.plangenerator.model.dto.LoanDataDto;
+import com.dimi.plangenerator.model.BorrowerPaymentsDTO;
+import com.dimi.plangenerator.model.LoanDataDto;
 
 import java.util.List;
 
