@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GeneratePlanService {
 
-    List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto);
+  List<BorrowerPaymentsDTO> generatePlan(LoanDataDto loanDataDto);
 }

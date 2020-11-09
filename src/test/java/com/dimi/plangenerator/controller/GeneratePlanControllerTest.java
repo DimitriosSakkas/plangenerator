@@ -26,31 +26,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = GeneratePlanController.class)
 public class GeneratePlanControllerTest {
 
-    private static final String baseUrl = "/generate-plan";
+  private static final String baseUrl = "/generate-plan";
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private GeneratePlanService generatePlanService;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+  @MockBean private GeneratePlanService generatePlanService;
 
-    @Test
-    public void shouldGeneratePlan() throws Exception {
-        // given
-        LoanDataDto loanDataDto = MockData.createLoanDataDto();
-        List<BorrowerPaymentsDTO> borrowerPaymentsDTOS = MockData.createBorrowerPaymentsDTOs();
-        Mockito
-                .when(generatePlanService.generatePlan(ArgumentMatchers.any(LoanDataDto.class)))
-                .thenReturn(borrowerPaymentsDTOS);
+  @Test
+  public void shouldGeneratePlan() throws Exception {
+    // given
+    LoanDataDto loanDataDto = MockData.createLoanDataDto();
+    List<BorrowerPaymentsDTO> borrowerPaymentsDTOS = MockData.createBorrowerPaymentsDTOs();
 
-        // when & then
-        mockMvc
-                .perform(post(baseUrl)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loanDataDto)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
-    }
+    Mockito.when(generatePlanService.generatePlan(ArgumentMatchers.any(LoanDataDto.class)))
+        .thenReturn(borrowerPaymentsDTOS);
 
+    // when & then
+    mockMvc
+        .perform(
+            post(baseUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loanDataDto)))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
+  }
 }

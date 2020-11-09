@@ -15,15 +15,14 @@ import java.util.List;
 @RequestMapping("generate-plan")
 public class GeneratePlanController {
 
-    private final GeneratePlanService generatePlanService;
+  private final GeneratePlanService generatePlanService;
 
-    public GeneratePlanController(GeneratePlanService generatePlanService) {
-        this.generatePlanService = generatePlanService;
-    }
+  public GeneratePlanController(GeneratePlanService generatePlanService) {
+    this.generatePlanService = generatePlanService;
+  }
 
-    @PostMapping
-    public List<BorrowerPaymentsDTO> generatePlan(@RequestBody @Valid LoanDataDto loanDataDto) {
-        return generatePlanService.generatePlan(loanDataDto);
-    }
-
+  @PostMapping
+  public List<BorrowerPaymentsDTO> generatePlan(@RequestBody @Valid LoanDataDto loanDataDto) {
+    return generatePlanService.generatePlan(loanDataDto);
+  }
 }

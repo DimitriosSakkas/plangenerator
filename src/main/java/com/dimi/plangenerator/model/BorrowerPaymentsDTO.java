@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Builder
 public class BorrowerPaymentsDTO {
 
-    private LocalDate date;
-    private double borrowerPaymentAmount;
-    private double initialOutstandingPrincipal;
-    private double interest;
-    private double principal;
-    private double remainingOutstandingPrincipal;
+  private LocalDate date;
+  private double borrowerPaymentAmount;
+  private double initialOutstandingPrincipal;
+  private double interest;
+  private double principal;
+  private double remainingOutstandingPrincipal;
 }
