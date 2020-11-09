@@ -24,25 +24,27 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
 
         double monthlyRate = loanDataDto.getNominalRate() * 0.01 / 12;
         double annuity = calculateAnnuity(monthlyRate, loanDataDto.getLoanAmount(), loanDataDto.getDuration());
-        System.out.println(annuity);
 
-        dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), loanDataDto.getLoanAmount()));
-
-        for (int month = 1; month <= loanDataDto.getDuration(); month++) {
-            dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), dtoList.getLast().getRemainingOutstandingPrincipal()));
+        for (int month = 0; month < loanDataDto.getDuration(); month++) {
+            if (month == 0) {
+                dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), loanDataDto.getLoanAmount(), loanDataDto.getStartDate()));
+            } else {
+                LocalDate date = loanDataDto.getStartDate().plusMonths(month);
+                dtoList.add(repaymentPlan(annuity, loanDataDto.getNominalRate(), dtoList.getLast().getRemainingOutstandingPrincipal(), date));
+            }
         }
 
-        return null;
+        return dtoList;
     }
 
-    private BorrowerPaymentsDTO repaymentPlan(double annuity, double rate, double initialOutstandingPrincipal) {
+    private BorrowerPaymentsDTO repaymentPlan(double annuity, double rate, double initialOutstandingPrincipal, LocalDate date) {
         BorrowerPaymentsDTO dto = new BorrowerPaymentsDTO();
         double interest = calculateInterest(rate, initialOutstandingPrincipal);
         double principal = calculatePrincipal(annuity, interest);
         double borrowerPaymentAmount = calculateBorrowerPaymentAmount(principal, interest);
         double remainingOutstandingPrincipal = calculateRemainingOutstandingPrincipal(initialOutstandingPrincipal, principal);
 
-        dto.setDate(LocalDate.now());
+        dto.setDate(date);
         dto.setInterest(interest);
         dto.setPrincipal(principal);
         dto.setBorrowerPaymentAmount(borrowerPaymentAmount);
