@@ -32,7 +32,7 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         dto1.setPrincipal(calculatePrincipal(annuity, interest1));
         //dto1.setRemainingOutstandingPrincipal(c);
         //dto1.set();
-       // dto1
+        // dto1
 
         for (int month = 1; month <= loanDataDto.getDuration(); month++) {
             BorrowerPaymentsDTO dto = new BorrowerPaymentsDTO();
@@ -52,8 +52,8 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         return roundValues(loanAmount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -duration)));
     }
 
-    private double calculateInterest(double interestRate, double outstandingPrincipal, byte daysInMonth, short daysInYear) {
-        return roundValues(interestRate * 0.01 * daysInMonth * outstandingPrincipal / daysInYear);
+    private double calculateInterest(double interestRate, double initialOutstandingPrincipal, byte daysInMonth, short daysInYear) {
+        return roundValues(interestRate * 0.01 * daysInMonth * initialOutstandingPrincipal / daysInYear);
     }
 
     private double calculatePrincipal(double annuity, double interest) {
@@ -64,8 +64,8 @@ public class GeneratePlanServiceImpl implements GeneratePlanService {
         return principal + interest;
     }
 
-    private double calculateRemainingOutstandingPrincipal(double previousOutstandingPrincipal, double principal) {
-        return previousOutstandingPrincipal - principal;
+    private double calculateRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal) {
+        return initialOutstandingPrincipal - principal;
     }
 
     private byte calculateDaysInMonth(LocalDate date) {
