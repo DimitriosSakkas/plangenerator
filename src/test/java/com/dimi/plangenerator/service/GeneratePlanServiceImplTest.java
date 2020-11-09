@@ -36,12 +36,21 @@ public class GeneratePlanServiceImplTest {
         List<BorrowerPaymentsDTO> result = generatePlanService
                 .generatePlan(loanDataDto);
 
-
         // then
         Assertions.assertAll(
                 "check if repayment plan has the right values",
-                () -> assertEquals(borrowerPaymentsDTOs.get(0), result.get(0)),
-                () -> assertEquals(borrowerPaymentsDTOs.get(1), result.get(1))
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getRemainingOutstandingPrincipal(),
+                        result.get(1).getRemainingOutstandingPrincipal(), 0.1d),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getBorrowerPaymentAmount(),
+                        result.get(1).getBorrowerPaymentAmount(), 0.1d),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getInitialOutstandingPrincipal(),
+                        result.get(1).getInitialOutstandingPrincipal(), 0.1d),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getInterest(),
+                        result.get(1).getInterest(), 0.1d),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getPrincipal(),
+                        result.get(1).getPrincipal(), 0.1d),
+                () -> assertEquals(borrowerPaymentsDTOs.get(1).getDate(),
+                        result.get(1).getDate())
         );
 
     }
