@@ -17,13 +17,11 @@ Run the application from an IDE as Java application or run in terminal
 ./mvnw spring-boot:run
 ```
 
-Call the endpoint, as a post request with url:
+Call the endpoint, as a post request with url and request body with no negative values, e.g.,
 
 ```sh
 localhost:8080/generate-plan
 ```
-
-and request body, e.g.,
 
 ```sh
 {
@@ -33,3 +31,4 @@ and request body, e.g.,
     "startDate": "2018-01-01T00:00:01Z"
 }
 ```
+
