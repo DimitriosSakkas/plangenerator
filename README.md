@@ -29,7 +29,7 @@ curl --location --request POST 'localhost:8080/generate-plan' \
 --data-raw '{
     "loanAmount": "5000",
     "nominalRate": "5.0",
-    "duration": 20,
+    "duration": 24,
     "startDate": "2018-01-01T00:00:01Z"
 }'
 ```
