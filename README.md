@@ -34,3 +34,4 @@ curl --location --request POST 'localhost:8080/generate-plan' \
 }'
 ```
 
+In the request body negative values are not allowed and the date must not be empty.
